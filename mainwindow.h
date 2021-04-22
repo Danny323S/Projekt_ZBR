@@ -30,14 +30,19 @@ private slots:
 
     void on_pushButton_usunPunkty_clicked();
 
+    void on_pushButton_Start_clicked();
+
 private:
     Ui::MainWindow *ui;
 
     QVector<POINT> supportingP;
     QVector<POINT> trajectoryP;
 
+    ITERATION list;
+
     MACHINE_COORDS actMachineCoords;
     ROBOT_COORDS_SYSTEMS s;
+
 
 };
 #endif // MAINWINDOW_H

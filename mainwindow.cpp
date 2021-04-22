@@ -53,7 +53,8 @@ void MainWindow::on_pushButtonStart_clicked()
     trajectoryP = trajectoryPoints(supportingP, startPoint, endPoint);
 
     for(int j = 0; j < trajectoryP.size() - 1; j++ ){
-        for(int i = 0; i <= ui->spinBox_step->text().toDouble();){
+        for(int i = 0; i <= ui->spinBox_step->text().toDouble(); i++){
+
             //funkcja interpolacji liniowej zwraca następne położenia TCP między wprowadzoonymi
             //punktami. Interpolacja realizowana jest o zdany krok
             s.coordTCP = linearInterpolation(i, j, ui->spinBox_step->text().toDouble(), trajectoryP[j], trajectoryP[j+1]);
@@ -62,9 +63,30 @@ void MainWindow::on_pushButtonStart_clicked()
             //Pomijanie punktów początkowych, które w poprzedniej iteracji gunkcji "j" były punktami końcowimi
             if(j != 0 && i == 0)
                 continue;
+
             //Obliczenie współrzędnych maszynowych, zwracanie przez referencje pozycji
             //układów współrzędnych oraz współrzędnych maszynowych.
             calculateMachineCoords(robotParameters, s, actMachineCoords);
+            ui->lineEdit_fi1->setText(QString::number(actMachineCoords.fi1));
+            ui->lineEdit_fi2->setText(QString::number(actMachineCoords.fi2));
+            ui->lineEdit_fi3->setText(QString::number(actMachineCoords.fi3));
+            ui->lineEdit_fi4->setText(QString::number(actMachineCoords.fi4));
+            ui->lineEdit_fi5->setText(QString::number(actMachineCoords.fi5));
+
+            //Zapis zmiennych do animacji
+//            ITERATION  lista;
+//            lista.machine_coords.push_back(actMachineCoords);
+
+//            STEP temp;
+//            temp.array_point[0] = {0,0,0};
+//            temp.array_point[1] = s.coord1;
+//            temp.array_point[2] = s.coord1prim;
+//            temp.array_point[3] = s.coord2;
+//            temp.array_point[4] = s.coord2prim;
+//            temp.array_point[5] = s.coordR;
+//            temp.array_point[6] = s.coordP;
+//            temp.array_point[7] = s.coordTCP;
+//            lista.vektor_step.push_back(temp);
         }
     }
 
@@ -107,3 +129,5 @@ void MainWindow::on_pushButton_usunPunkty_clicked()
     supportingP.pop_back();
     ui->tableWidget->removeRow(ui->tableWidget->rowCount()-1);
 }
+
+

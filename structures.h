@@ -67,6 +67,7 @@ struct STEP
 
 struct ITERATION{
     QVector<STEP> vektor_step;
+    QVector<MACHINE_COORDS> machine_coords;
 };
 
 #endif // STRUCTURES_H
