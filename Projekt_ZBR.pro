@@ -1,4 +1,5 @@
-QT       += core gui
+QT       += core gui \
+    quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,14 +11,12 @@ CONFIG += c++11
 
 SOURCES += \
     calculation.cpp \
-    coordinatesystem.cpp \
     main.cpp \
     mainwindow.cpp \
     structures.cpp
 
 HEADERS += \
-    calculations.h \
-    coordinatesystem.h \
+    calculation.h \
     mainwindow.h \
     structures.h
 

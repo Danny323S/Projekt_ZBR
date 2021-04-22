@@ -3,8 +3,7 @@
 #include <string>
 #include <cmath>
 #include <QVector>
-#include "calculations.h"
-#include "coordinatesystem.h"
+#include "calculation.h"
 #include "structures.h"
 
 #include <QApplication>
