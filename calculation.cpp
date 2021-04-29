@@ -1,4 +1,5 @@
 #include "calculation.h"
+#include "QMessageBox"
 
 QVector<POINT> trajectoryPoints(QVector<POINT> supportingPoints, POINT startPoint, POINT endPoint){
     QVector<POINT> trajectoryPoints;
@@ -205,4 +206,47 @@ void printCoordSystemPosition(ROBOT_COORDS_SYSTEMS s, MACHINE_COORDS actMachineC
     std::cout << "fi3: " << actMachineCoords.fi3 << std::endl;
     std::cout << "fi4: " << actMachineCoords.fi4 << std::endl;
     std::cout << "fi5: " << actMachineCoords.fi5 << std::endl << std::endl;
+}
+
+bool checkPoint(ROBOT_PARAMETERS param, POINT addedPoint){
+
+    double reach = param.l1 + param.l2 + param.l3 + param.l4;
+
+    double addedPointDistance = sqrt(pow(addedPoint.x,2) + pow(addedPoint.y,2) + pow(addedPoint.z,2));
+
+    if(addedPointDistance > reach)
+        return false;
+
+    return true;
+}
+
+bool checkSafetyCondition(ROBOT_COORDS_SYSTEMS s){
+
+    VEKTOR A = {s.coord1.x - s.coord0.x, s.coord1.y - s.coord0.y, s.coord1.z - s.coord0.z };
+    VEKTOR B = {s.coord1prim.x - s.coord1.x, s.coord1prim.y - s.coord1.y, s.coord1prim.z - s.coord1.z };
+    VEKTOR C = {s.coord2prim.x - s.coord1prim.x, s.coord2prim.y - s.coord1prim.y, s.coord2prim.z - s.coord1prim.z };
+    VEKTOR D = {s.coord2.x - s.coord2prim.x, s.coord2.y - s.coord2prim.y, s.coord2.z - s.coord2prim.z };
+    VEKTOR E = {s.coordR.x - s.coord2.x, s.coordR.y - s.coord2.y, s.coordR.z - s.coord2.z };
+    VEKTOR F = {s.coordP.x - s.coordR.x, s.coordP.y - s.coordR.y, s.coordP.z - s.coordR.z };
+    VEKTOR G = {s.coordTCP.x - s.coordP.x, s.coordTCP.y - s.coordP.y, s.coordTCP.z - s.coordP.z };
+
+    //Jeżeli linie nie są skośne, sprawdzane jest czy punkt ich przecięcia leży w obrębie długości ramion
+    if(!skewLines(A, C, s.coord0, s.coord1)){
+
+    }
+
+}
+
+bool skewLines(VEKTOR n1, VEKTOR n2, POINT p1, POINT p2){
+    // Jeżeli prsote są skośne to iloczyn mieszany (n1, n2, p1p2) != 0
+
+    VEKTOR P1P2 = {p2.x-p1.x, p2.y-p1.y, p2.z-p1.z};
+
+    //iloczyn miewszany
+    double tripleProduct = n1.x*(n2.y*P1P2.z - n2.z*P1P2.y) - n1.y*(n2.x*P1P2.z - n2.z*P1P2.x) + n1.z*(n2.x*P1P2.y - n2.y*P1P2.x);
+
+    if(tripleProduct == 0)
+        return true;//Proste skośne == prawda
+    else
+        return false;//Proste przecinają się == false
 }

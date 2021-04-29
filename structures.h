@@ -9,6 +9,12 @@ struct POINT{
     double z = 0;
 };
 
+struct VEKTOR{
+    double x;
+    double y;
+    double z;
+};
+
 struct ROBOT_COORDS_SYSTEMS{
     POINT coord0;
     POINT coord1;

@@ -19,7 +19,6 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButtonStart_clicked()
 {
     //Odczytywanie i zapisywanie parametrów robota wprowadzonych przez użytkownika
-    ROBOT_PARAMETERS robotParameters;
     robotParameters.l1 = ui->lineEdit_L1->text().toDouble();
     robotParameters.l2 = ui->lineEdit_L2->text().toDouble();
     robotParameters.l3 = ui->lineEdit_L3->text().toDouble();
@@ -39,15 +38,37 @@ void MainWindow::on_pushButtonStart_clicked()
 
     //Odczytywanie punktu początkowego i końcowego wprowadzonego przez użytkownika
     POINT startPoint;
-    startPoint.x = ui->lineEdit_startPoinX->text().toDouble();
-    startPoint.y = ui->lineEdit_startPoinY->text().toDouble();
-    startPoint.z = ui->lineEdit_startPoinZ->text().toDouble();
+    startPoint.x = ui->lineEdit_startPointX->text().toDouble();
+    startPoint.y = ui->lineEdit_startPointY->text().toDouble();
+    startPoint.z = ui->lineEdit_startPointZ->text().toDouble();
 
+    if(!checkPoint(robotParameters, startPoint)){
+        QMessageBox::warning(this, "Ostrzeżenie", "Wprowadzony punkt początkowy znajduje się po za polem roboczym");
+        startPoint.x = 0;
+        startPoint.y = 0;
+        startPoint.z = 0;
+
+        ui->lineEdit_startPointX->clear();
+        ui->lineEdit_startPointY->clear();
+        ui->lineEdit_startPointZ->clear();
+
+    }
 
     POINT endPoint;
     endPoint.x = ui->lineEdit_endPointX->text().toDouble();
     endPoint.y = ui->lineEdit_endPointY->text().toDouble();
     endPoint.z = ui->lineEdit_endPointZ->text().toDouble();
+
+    if(!checkPoint(robotParameters, endPoint)){
+        QMessageBox::warning(this, "Ostrzeżenie", "Wprowadzony punkt końcowy znajduje się po za polem roboczym");
+        endPoint.x = 0;
+        endPoint.y = 0;
+        endPoint.z = 0;
+
+        ui->lineEdit_endPointX->clear();
+        ui->lineEdit_endPointY->clear();
+        ui->lineEdit_endPointZ->clear();
+    }
 
     //Wektor zawierającu Punkt początkowy, Punkt końcowy oraz punkty podporowe, jeżeli takie zostały dodane
     trajectoryP = trajectoryPoints(supportingP, startPoint, endPoint);
@@ -100,27 +121,37 @@ void MainWindow::on_pushButton_2_clicked()
     supportingPoint.y = ui->lineEdit_supportingY->text().toDouble();
     supportingPoint.z = ui->lineEdit_supportingZ->text().toDouble();
 
-    supportingP.push_back(supportingPoint);
+    if(!checkPoint(robotParameters, supportingPoint)){
+        QMessageBox::warning(this, "Ostrzeżenie", "Wprowadzony punkt podporowy znajduje się po za polem roboczym");
+        supportingPoint.x = 0;
+        supportingPoint.y = 0;
+        supportingPoint.z = 0;
 
-    ui->tableWidget->insertRow(ui->tableWidget->rowCount());
-    for(int i = 0; i < ui->tableWidget->columnCount(); i++){
-        QTableWidgetItem *item = new QTableWidgetItem;
+        ui->lineEdit_supportingX->clear();
+        ui->lineEdit_supportingY->clear();
+        ui->lineEdit_supportingZ->clear();
+    } else {
+        supportingP.push_back(supportingPoint);
 
-        if(i == 0)
-            item->setText(QString::number(supportingP[supportingP.size()-1].x));
-        if(i == 1)
-            item->setText(QString::number(supportingP[supportingP.size()-1].y));
-        if(i == 2)
-            item->setText(QString::number(supportingP[supportingP.size()-1].z));
+        ui->tableWidget->insertRow(ui->tableWidget->rowCount());
+        for(int i = 0; i < ui->tableWidget->columnCount(); i++){
+            QTableWidgetItem *item = new QTableWidgetItem;
 
-        ui->tableWidget->setItem(ui->tableWidget->rowCount() - 1, i, item);
+            if(i == 0)
+                item->setText(QString::number(supportingP[supportingP.size()-1].x));
+            if(i == 1)
+                item->setText(QString::number(supportingP[supportingP.size()-1].y));
+            if(i == 2)
+                item->setText(QString::number(supportingP[supportingP.size()-1].z));
+
+            ui->tableWidget->setItem(ui->tableWidget->rowCount() - 1, i, item);
+        }
+
+
+        ui->lineEdit_supportingX->clear();
+        ui->lineEdit_supportingY->clear();
+        ui->lineEdit_supportingZ->clear();
     }
-
-
-    ui->lineEdit_supportingX->clear();
-    ui->lineEdit_supportingY->clear();
-    ui->lineEdit_supportingZ->clear();
-
 }
 
 //Usuwa ostatnio dodany punkt podporowy
@@ -129,5 +160,6 @@ void MainWindow::on_pushButton_usunPunkty_clicked()
     supportingP.pop_back();
     ui->tableWidget->removeRow(ui->tableWidget->rowCount()-1);
 }
+
 
 

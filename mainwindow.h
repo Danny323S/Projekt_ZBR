@@ -30,8 +30,6 @@ private slots:
 
     void on_pushButton_usunPunkty_clicked();
 
-    void on_pushButton_Start_clicked();
-
 private:
     Ui::MainWindow *ui;
 
@@ -40,6 +38,7 @@ private:
 
     ITERATION list;
 
+    ROBOT_PARAMETERS robotParameters;
     MACHINE_COORDS actMachineCoords;
     ROBOT_COORDS_SYSTEMS s;
 
