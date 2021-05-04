@@ -7,6 +7,9 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QVector>
+#include "database.h"
+#include "animation.h"
+#include <QPixmap>
 
 #include <QTableWidget>
 #include <QTableWidgetItem>
@@ -21,6 +24,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
+    void animation();
     ~MainWindow();
 
 private slots:
@@ -30,17 +34,38 @@ private slots:
 
     void on_pushButton_usunPunkty_clicked();
 
+    void on_horizontalSlider_sliderMoved(int position);
+
+    void machine_coordinates_display();
+
 private:
     Ui::MainWindow *ui;
 
     QVector<Point> supportingP;
     QVector<Point> trajectoryP;
 
-    Iteration lista;
+    Iteration *lista;
 
     ROBOT_PARAMETERS robotParameters;
     MACHINE_COORDS actMachineCoords;
     ROBOT_COORDS_SYSTEMS s;
+
+    //lista do animacji
+    Robot lista1;
+
+    //objekt transformuj¹cy liste z punktami na liste do animacji
+    Database *database;
+
+    //animacja
+    CRobot_animation *scene;
+
+    //czas animacji
+    double _time;
+
+    int positon_previous;
+
+    int i=0;
+    QTimer *timer;
 
 
 };

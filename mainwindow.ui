@@ -512,7 +512,7 @@
             <enum>Qt::LeftToRight</enum>
            </property>
            <property name="text">
-            <string/>
+            <string>300</string>
            </property>
           </widget>
          </item>
@@ -522,7 +522,7 @@
             <enum>Qt::LeftToRight</enum>
            </property>
            <property name="text">
-            <string/>
+            <string>500</string>
            </property>
           </widget>
          </item>
@@ -532,7 +532,7 @@
             <enum>Qt::LeftToRight</enum>
            </property>
            <property name="text">
-            <string/>
+            <string>600</string>
            </property>
           </widget>
          </item>
@@ -589,7 +589,7 @@
             <enum>Qt::LeftToRight</enum>
            </property>
            <property name="text">
-            <string/>
+            <string>-150</string>
            </property>
           </widget>
          </item>
@@ -611,7 +611,7 @@
             <enum>Qt::LeftToRight</enum>
            </property>
            <property name="text">
-            <string/>
+            <string>800</string>
            </property>
           </widget>
          </item>
@@ -633,7 +633,7 @@
             <enum>Qt::LeftToRight</enum>
            </property>
            <property name="text">
-            <string/>
+            <string>1032</string>
            </property>
           </widget>
          </item>
@@ -692,7 +692,11 @@ przejazdu:</string>
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox_time"/>
+        <widget class="QSpinBox" name="spinBox_time">
+         <property name="value">
+          <number>15</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -792,8 +796,8 @@ przejazdu:</string>
      <rect>
       <x>640</x>
       <y>140</y>
-      <width>741</width>
-      <height>651</height>
+      <width>524</width>
+      <height>394</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -811,6 +815,13 @@ przejazdu:</string>
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QGraphicsView" name="graphicsView_3"/>
@@ -1119,6 +1130,25 @@ przejazdu:</string>
      </item>
     </layout>
    </widget>
+   <widget class="QSlider" name="horizontalSlider">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>100</y>
+      <width>160</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <number>22</number>
+    </property>
+    <property name="value">
+     <number>11</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -1132,6 +1162,48 @@ przejazdu:</string>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <tabstops>
+  <tabstop>lineEdit_startPointX</tabstop>
+  <tabstop>lineEdit_startPointY</tabstop>
+  <tabstop>lineEdit_startPointZ</tabstop>
+  <tabstop>lineEdit_endPointX</tabstop>
+  <tabstop>lineEdit_endPointY</tabstop>
+  <tabstop>lineEdit_endPointZ</tabstop>
+  <tabstop>pushButtonStart</tabstop>
+  <tabstop>lineEdit_L1</tabstop>
+  <tabstop>lineEdit_OAngle</tabstop>
+  <tabstop>comboBox_delta1</tabstop>
+  <tabstop>lineEdit_d</tabstop>
+  <tabstop>lineEdit_L5</tabstop>
+  <tabstop>comboBox_delta2</tabstop>
+  <tabstop>lineEdit_L4</tabstop>
+  <tabstop>lineEdit_fi2</tabstop>
+  <tabstop>lineEdit_fi4</tabstop>
+  <tabstop>lineEdit_fi3</tabstop>
+  <tabstop>lineEdit_fi5</tabstop>
+  <tabstop>lineEdit_fi1</tabstop>
+  <tabstop>lineEdit_L2</tabstop>
+  <tabstop>lineEdit_L6</tabstop>
+  <tabstop>lineEdit_L3</tabstop>
+  <tabstop>comboBox_delta5</tabstop>
+  <tabstop>lineEdit_YAngle</tabstop>
+  <tabstop>lineEdit_e</tabstop>
+  <tabstop>spinBox_step</tabstop>
+  <tabstop>spinBox_time</tabstop>
+  <tabstop>pushButtonStart_2</tabstop>
+  <tabstop>graphicsView_3</tabstop>
+  <tabstop>graphicsView_2</tabstop>
+  <tabstop>graphicsView</tabstop>
+  <tabstop>lineEdit_supportingX</tabstop>
+  <tabstop>lineEdit_supportingY</tabstop>
+  <tabstop>lineEdit_supportingZ</tabstop>
+  <tabstop>pushButton_2</tabstop>
+  <tabstop>pushButton_usunPunkty</tabstop>
+  <tabstop>lineEdit_startPointY_2</tabstop>
+  <tabstop>lineEdit_startPointX_2</tabstop>
+  <tabstop>lineEdit_startPointZ_2</tabstop>
+  <tabstop>horizontalSlider</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

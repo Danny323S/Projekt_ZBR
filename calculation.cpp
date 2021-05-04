@@ -214,7 +214,7 @@ bool calculateMachineCoords(ROBOT_PARAMETERS param, ROBOT_COORDS_SYSTEMS &s, MAC
 //    std::cout << "z02prim = " << s.coord2prim.z << std::endl;
 
     s.coord2.x = s.coord2prim.x -(param.d - param.e)*S1;
-    s.coord2.y = s.coord2.y +(param.d - param.e)*C1;
+    s.coord2.y = s.coord2prim.y +(param.d - param.e)*C1;
     s.coord2.z = s.coord2prim.z;
 
 //    std::cout << "Wspolrzedne ukladu 02" << std::endl;

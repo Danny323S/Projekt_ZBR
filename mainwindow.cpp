@@ -1,6 +1,6 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QPixmap>
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -10,11 +10,85 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     //Dodawanie obrazka
-    QPixmap icon(":/img/img/icon.jpg");
+    QPixmap icon(":/new/prefix1/img/icon.jpg");
     int width = ui->label_icon->width();
     int height = ui->label_icon->height();
     ui->label_icon->setPixmap(icon.scaled(width, height, Qt::KeepAspectRatio));
 
+}
+
+void MainWindow::animation()
+{
+
+    int positon_previous=11;
+
+    ui->horizontalSlider->setValue(11);
+
+    Robot lista1;
+
+    database=new Database(lista,&lista1);
+
+    double k = database->coordinate_max;
+
+
+
+    double _time=(ui->spinBox_time->text()).toDouble();
+
+    scene=new CRobot_animation(&lista1,_time);
+
+
+    ui->graphicsView->setRenderHint(QPainter::Antialiasing);
+
+    ui->graphicsView->setScene(scene->view_xy);
+
+    //ui->graphicsView->fitInView(QRectF(-182,-160,364+k,320+k));
+   ui->graphicsView->fitInView(QRectF(-182,-160,364+k,320+k));
+
+    scene->view_xy->setSceneRect(-182,-160,364,320);
+
+
+    ui->graphicsView_2->setRenderHint(QPainter::Antialiasing);
+
+    ui->graphicsView_2->setScene(scene->view_xz);
+
+    ui->graphicsView_2->fitInView(QRectF(-182,-160,364+k,320+k));
+
+    scene->view_xz->setSceneRect(-182,-255-k/2,364,320);
+
+
+    ui->graphicsView_3->setRenderHint(QPainter::Antialiasing);
+
+    ui->graphicsView_3->setScene(scene->view_yz);
+
+    ui->graphicsView_3->fitInView(QRectF(-182,-160,364+k,320+k));
+
+    ui->graphicsView_3->setSceneRect(-182,-255-k/2,364,320);
+
+    i=0;
+    machine_coordinates_display();
+    timer = new QTimer(this);
+    timer->setInterval(_time/lista->machine_coords.size()*1000);
+    connect(timer, SIGNAL(timeout()), this, SLOT(machine_coordinates_display()));
+    timer->start();
+
+    //delete database;
+
+
+}
+
+void MainWindow::machine_coordinates_display()
+{
+
+        ui->lineEdit_fi1->setText(QString::number(database->machine_coords[i].fi1));
+        ui->lineEdit_fi2->setText(QString::number(database->machine_coords[i].fi2));
+        ui->lineEdit_fi3->setText(QString::number(database->machine_coords[i].fi3));
+        ui->lineEdit_fi4->setText(QString::number(database->machine_coords[i].fi4));
+        ui->lineEdit_fi5->setText(QString::number(database->machine_coords[i].fi5));
+        ui->lineEdit_startPointX_2->setText(QString::number(database->vektor_tcp[i].x));
+        ui->lineEdit_startPointY_2->setText(QString::number(database->vektor_tcp[i].y));
+        ui->lineEdit_startPointZ_2->setText(QString::number(database->vektor_tcp[i].z));
+        i++;
+        if(i >= lista->machine_coords.size()) timer->stop();
 }
 
 MainWindow::~MainWindow()
@@ -25,6 +99,7 @@ MainWindow::~MainWindow()
 //Przycisk uruchamiający całą symulację
 void MainWindow::on_pushButtonStart_clicked()
 {
+    s.coord2.y=0;
     //Odczytywanie i zapisywanie parametrów robota wprowadzonych przez użytkownika
     robotParameters.l1 = ui->lineEdit_L1->text().toDouble();
     robotParameters.l2 = ui->lineEdit_L2->text().toDouble();
@@ -83,7 +158,8 @@ void MainWindow::on_pushButtonStart_clicked()
     //True jeżeli wyniki wszystkich obliczeń są poprawne
     // czyli wszystkie pierwiastki są dodatnie
     bool calculationResult = true;
-
+    
+    lista = new Iteration;
 
     for(int j = 0; j < trajectoryP.size() - 1; j++ ){
         for(int i = 0; i <= ui->spinBox_step->text().toDouble(); i++){
@@ -102,19 +178,19 @@ void MainWindow::on_pushButtonStart_clicked()
             calculationResult = calculateMachineCoords(robotParameters, s, actMachineCoords);
 
             //Zapis zmiennych do animacji
-//            Iteration  lista;
-//            lista.machine_coords.push_back(actMachineCoords);
 
-//            Step temp;
-//            temp.array_point[0] = {0,0,0};
-//            temp.array_point[1] = s.coord1;
-//            temp.array_point[2] = s.coord1prim;
-//            temp.array_point[3] = s.coord2;
-//            temp.array_point[4] = s.coord2prim;
-//            temp.array_point[5] = s.coordR;
-//            temp.array_point[6] = s.coordP;
-//            temp.array_point[7] = s.coordTCP;
-//            lista.vektor_step.push_back(temp);
+            lista->machine_coords.push_back(actMachineCoords);
+
+            Step temp;
+            temp.array_point[0] = {0,0,0};
+            temp.array_point[1] = {s.coord1.x,s.coord1.y,s.coord1.z};
+            temp.array_point[2] = {s.coord1prim.x,s.coord1prim.y,s.coord1prim.z};
+            temp.array_point[3] = {s.coord2.x,s.coord2.y,s.coord2.z};
+            temp.array_point[4] = {s.coord2prim.x,s.coord2prim.y,s.coord2prim.z};
+            temp.array_point[5] = {s.coordR.x,s.coordR.y,s.coordR.z};
+            temp.array_point[6] = {s.coordP.x,s.coordP.y,s.coordP.z};
+            temp.array_point[7] = {s.coordTCP.x,s.coordTCP.y,s.coordTCP.z};
+            lista->vektor_step.push_back(temp);
 
             if(checksafetyCondition(s) == false){
                 QMessageBox::warning(this, "Ostrzeżenie", "Warunke bezpiecznego przejścia nie spełniony\n Dodaj punkty podporowe");
@@ -126,16 +202,24 @@ void MainWindow::on_pushButtonStart_clicked()
                 break;
             }
         }
+        if(checksafetyCondition(s) == false){
+            break;
+        }
+
+        if(calculationResult == false){
+            break;
+        }
     }
 
 
     if(calculationResult == true && checksafetyCondition(s) == true){
-
+            animation();
     }
 
-    supportingP.clear();
-    trajectoryP.clear();
-    //lista.clear();
+    //supportingP.clear();
+    //trajectoryP.clear();
+
+
 }
 
 //Przycisk Dodaj Punkt. Dodaje punkt podporowy wprowadzony przez użytkownika
@@ -186,6 +270,25 @@ void MainWindow::on_pushButton_usunPunkty_clicked()
         supportingP.pop_back();
         ui->tableWidget->removeRow(ui->tableWidget->rowCount()-1);
     }
+}
+
+void MainWindow::on_horizontalSlider_sliderMoved(int position)
+{
+
+    if(position>positon_previous)
+    {
+        ui->graphicsView->scale(1.1,1.1);
+        ui->graphicsView_2->scale(1.1,1.1);
+        ui->graphicsView_3->scale(1.1,1.1);
+    }
+   if(position<positon_previous)
+   {
+       ui->graphicsView->scale(1/1.1,1/1.1);
+       ui->graphicsView_2->scale(1/1.1,1/1.1);
+       ui->graphicsView_3->scale(1/1.1,1/1.1);
+   }
+    positon_previous=position;
+
 }
 
 

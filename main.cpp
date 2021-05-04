@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include <iostream>
 #include <string>
 #include <cmath>
@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
-    w.show();
+    w.showMinimized();
 
 //    //Tego fragmentu kodu tutaj nie będzie
 //    QVector<Point> supportingPoints;
