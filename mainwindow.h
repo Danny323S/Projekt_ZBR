@@ -33,10 +33,10 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    QVector<POINT> supportingP;
-    QVector<POINT> trajectoryP;
+    QVector<Point> supportingP;
+    QVector<Point> trajectoryP;
 
-    ITERATION list;
+    Iteration lista;
 
     ROBOT_PARAMETERS robotParameters;
     MACHINE_COORDS actMachineCoords;

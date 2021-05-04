@@ -3,7 +3,7 @@
 
 #include <QVector>
 
-struct POINT{
+struct Point{
     double x = 0;
     double y = 0;
     double z = 0;
@@ -16,17 +16,17 @@ struct VEKTOR{
 };
 
 struct ROBOT_COORDS_SYSTEMS{
-    POINT coord0;
-    POINT coord1;
-    POINT coord1prim;
-    POINT coord2;
-    POINT coord2prim;
+    Point coord0;
+    Point coord1;
+    Point coord1prim;
+    Point coord2;
+    Point coord2prim;
     //3th coordsystem
-    POINT coordR;
+    Point coordR;
     //4th cooordsystem
-    POINT coordP;
+    Point coordP;
     //5th coordsystem
-    POINT coordTCP;
+    Point coordTCP;
 };
 
 //struktura zawierająca współrzędne maszynowe robota
@@ -66,13 +66,13 @@ struct  ROBOT_PARAMETERS {
     double delta5 = -1;
 };
 
-struct STEP
+struct Step
 {
-    POINT array_point[8]; // ilosc punktow
+    Point array_point[8]; // ilosc punktow
 };
 
-struct ITERATION{
-    QVector<STEP> vektor_step;
+struct Iteration{
+    QVector<Step> vektor_step;
     QVector<MACHINE_COORDS> machine_coords;
 };
 

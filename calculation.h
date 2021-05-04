@@ -6,15 +6,15 @@
 #include <QVector>
 
 
-QVector<POINT> trajectoryPoints(QVector<POINT> supportingPoints, POINT startPoint, POINT endPoint);
+QVector<Point> trajectoryPoints(QVector<Point> supportingPoints, Point startPoint, Point endPoint);
 
-POINT linearInterpolation(int i, int j,double step, POINT startP, POINT endP);
+Point linearInterpolation(int i, int j,double step, Point startP, Point endP);
 
-void calculateMachineCoords(ROBOT_PARAMETERS param, ROBOT_COORDS_SYSTEMS &s, MACHINE_COORDS &actMachineCoords);
+bool calculateMachineCoords(ROBOT_PARAMETERS param, ROBOT_COORDS_SYSTEMS &s, MACHINE_COORDS &actMachineCoords);
 
 void printCoordSystemPosition(ROBOT_COORDS_SYSTEMS s, MACHINE_COORDS actMachineCoords, int licz);
 
-bool checkPoint(ROBOT_PARAMETERS param, POINT addedPoint);
+bool checkPoint(ROBOT_PARAMETERS param, Point addedPoint);
 
 
 
@@ -22,7 +22,9 @@ bool checkPoint(ROBOT_PARAMETERS param, POINT addedPoint);
 bool checksafetyCondition(ROBOT_COORDS_SYSTEMS s);
 
 //Sprawdzenie czy proste są skośne
-bool skewLines(VEKTOR n1, VEKTOR n2, POINT p1, POINT p2);
+bool skewLines(VEKTOR n1, VEKTOR n2, Point p1, Point p2);
+
+bool crossPoint(VEKTOR n1, VEKTOR n2, Point p1, Point p2);
 
 
 #endif // CALCULATION_H

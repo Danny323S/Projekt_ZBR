@@ -1,12 +1,19 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QPixmap>
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);    
+    ui->setupUi(this);
+
+    //Dodawanie obrazka
+    QPixmap icon(":/img/img/icon.jpg");
+    int width = ui->label_icon->width();
+    int height = ui->label_icon->height();
+    ui->label_icon->setPixmap(icon.scaled(width, height, Qt::KeepAspectRatio));
 
 }
 
@@ -37,7 +44,7 @@ void MainWindow::on_pushButtonStart_clicked()
     robotParameters.delta5 = ui->comboBox_delta5->currentText().toDouble();
 
     //Odczytywanie punktu początkowego i końcowego wprowadzonego przez użytkownika
-    POINT startPoint;
+    Point startPoint;
     startPoint.x = ui->lineEdit_startPointX->text().toDouble();
     startPoint.y = ui->lineEdit_startPointY->text().toDouble();
     startPoint.z = ui->lineEdit_startPointZ->text().toDouble();
@@ -54,7 +61,7 @@ void MainWindow::on_pushButtonStart_clicked()
 
     }
 
-    POINT endPoint;
+    Point endPoint;
     endPoint.x = ui->lineEdit_endPointX->text().toDouble();
     endPoint.y = ui->lineEdit_endPointY->text().toDouble();
     endPoint.z = ui->lineEdit_endPointZ->text().toDouble();
@@ -73,6 +80,11 @@ void MainWindow::on_pushButtonStart_clicked()
     //Wektor zawierającu Punkt początkowy, Punkt końcowy oraz punkty podporowe, jeżeli takie zostały dodane
     trajectoryP = trajectoryPoints(supportingP, startPoint, endPoint);
 
+    //True jeżeli wyniki wszystkich obliczeń są poprawne
+    // czyli wszystkie pierwiastki są dodatnie
+    bool calculationResult = true;
+
+
     for(int j = 0; j < trajectoryP.size() - 1; j++ ){
         for(int i = 0; i <= ui->spinBox_step->text().toDouble(); i++){
 
@@ -87,18 +99,13 @@ void MainWindow::on_pushButtonStart_clicked()
 
             //Obliczenie współrzędnych maszynowych, zwracanie przez referencje pozycji
             //układów współrzędnych oraz współrzędnych maszynowych.
-            calculateMachineCoords(robotParameters, s, actMachineCoords);
-            ui->lineEdit_fi1->setText(QString::number(actMachineCoords.fi1));
-            ui->lineEdit_fi2->setText(QString::number(actMachineCoords.fi2));
-            ui->lineEdit_fi3->setText(QString::number(actMachineCoords.fi3));
-            ui->lineEdit_fi4->setText(QString::number(actMachineCoords.fi4));
-            ui->lineEdit_fi5->setText(QString::number(actMachineCoords.fi5));
+            calculationResult = calculateMachineCoords(robotParameters, s, actMachineCoords);
 
             //Zapis zmiennych do animacji
-//            ITERATION  lista;
+//            Iteration  lista;
 //            lista.machine_coords.push_back(actMachineCoords);
 
-//            STEP temp;
+//            Step temp;
 //            temp.array_point[0] = {0,0,0};
 //            temp.array_point[1] = s.coord1;
 //            temp.array_point[2] = s.coord1prim;
@@ -108,15 +115,33 @@ void MainWindow::on_pushButtonStart_clicked()
 //            temp.array_point[6] = s.coordP;
 //            temp.array_point[7] = s.coordTCP;
 //            lista.vektor_step.push_back(temp);
+
+            if(checksafetyCondition(s) == false){
+                QMessageBox::warning(this, "Ostrzeżenie", "Warunke bezpiecznego przejścia nie spełniony\n Dodaj punkty podporowe");
+                break;
+            }
+
+            if(calculationResult == false){
+                QMessageBox::warning(this, "Ostrzeżenie", "Wproadzone dane są błędne");
+                break;
+            }
         }
     }
 
+
+    if(calculationResult == true && checksafetyCondition(s) == true){
+
+    }
+
+    supportingP.clear();
+    trajectoryP.clear();
+    //lista.clear();
 }
 
 //Przycisk Dodaj Punkt. Dodaje punkt podporowy wprowadzony przez użytkownika
 void MainWindow::on_pushButton_2_clicked()
 {
-    POINT supportingPoint;
+    Point supportingPoint;
     supportingPoint.x = ui->lineEdit_supportingX->text().toDouble();
     supportingPoint.y = ui->lineEdit_supportingY->text().toDouble();
     supportingPoint.z = ui->lineEdit_supportingZ->text().toDouble();
@@ -157,8 +182,10 @@ void MainWindow::on_pushButton_2_clicked()
 //Usuwa ostatnio dodany punkt podporowy
 void MainWindow::on_pushButton_usunPunkty_clicked()
 {
-    supportingP.pop_back();
-    ui->tableWidget->removeRow(ui->tableWidget->rowCount()-1);
+    if(!(ui->tableWidget->rowCount() == 0)){
+        supportingP.pop_back();
+        ui->tableWidget->removeRow(ui->tableWidget->rowCount()-1);
+    }
 }
 
 

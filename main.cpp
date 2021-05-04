@@ -15,23 +15,23 @@ int main(int argc, char *argv[])
     w.show();
 
 //    //Tego fragmentu kodu tutaj nie będzie
-//    QVector<POINT> supportingPoints;
-//    POINT P1 = {700, 100, 400};
-//    POINT P2 = {500, -300, 200};
-//    POINT P3 = {100, -450, 200};
+//    QVector<Point> supportingPoints;
+//    Point P1 = {700, 100, 400};
+//    Point P2 = {500, -300, 200};
+//    Point P3 = {100, -450, 200};
 //    supportingPoints.push_back(P1);
 //    supportingPoints.push_back(P2);
 //    supportingPoints.push_back(P3);
 
 //    ROBOT_PARAMETERS parameter; // Wprowadzane z GUI
-//    POINT startP = {500, 600, 300}; // Wprowadzane z GUI
-//    POINT endP = {-500, -600, 200}; // Wprowadzane z GUI
+//    Point startP = {500, 600, 300}; // Wprowadzane z GUI
+//    Point endP = {-500, -600, 200}; // Wprowadzane z GUI
 //    double step = 5; // Wprowadzane z GUI
 
 //    MACHINE_COORDS machineC;
-//    POINT actTcpPoint;
+//    Point actTcpPoint;
 
-//    QVector<POINT> trajectoryP = trajectoryPoints(supportingPoints, startP, endP);
+//    QVector<Point> trajectoryP = trajectoryPoints(supportingPoints, startP, endP);
 
 //    for(int j = 0; j < trajectoryP.size() - 1; j++)
 //    {

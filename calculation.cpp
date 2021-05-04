@@ -1,8 +1,8 @@
 #include "calculation.h"
 #include "QMessageBox"
 
-QVector<POINT> trajectoryPoints(QVector<POINT> supportingPoints, POINT startPoint, POINT endPoint){
-    QVector<POINT> trajectoryPoints;
+QVector<Point> trajectoryPoints(QVector<Point> supportingPoints, Point startPoint, Point endPoint){
+    QVector<Point> trajectoryPoints;
 
     if(!supportingPoints.empty())
     {
@@ -21,14 +21,14 @@ QVector<POINT> trajectoryPoints(QVector<POINT> supportingPoints, POINT startPoin
     return trajectoryPoints;
 }
 
-POINT linearInterpolation(int i, int j, double step, POINT startP, POINT endP){
+Point linearInterpolation(int i, int j, double step, Point startP, Point endP){
     struct VECTOR{
         double x;
         double y;
         double z;
     };
 
-    POINT actTcpPoint;
+    Point actTcpPoint;
     VECTOR SE;
     SE.x = endP.x - startP.x;
     SE.y = endP.y - startP.y;
@@ -56,7 +56,7 @@ POINT linearInterpolation(int i, int j, double step, POINT startP, POINT endP){
     return  actTcpPoint;
 }
 
-void calculateMachineCoords(ROBOT_PARAMETERS param, ROBOT_COORDS_SYSTEMS &s, MACHINE_COORDS &actMachineCoords){
+bool calculateMachineCoords(ROBOT_PARAMETERS param, ROBOT_COORDS_SYSTEMS &s, MACHINE_COORDS &actMachineCoords){
     //param, s , actMachineCoords
 
     double SO = sin(param.OAngle*M_PI / 180);
@@ -74,15 +74,36 @@ void calculateMachineCoords(ROBOT_PARAMETERS param, ROBOT_COORDS_SYSTEMS &s, MAC
 //    std::cout << "yP = " << s.coordP.y << std::endl;
 //    std::cout << "zP = " << s.coordP.z << std::endl;
 
-    double S1 = ((param.e*s.coordP.x + param.delta1*s.coordP.y*sqrt(pow(s.coordP.x,2) + pow(s.coordP.y,2) - pow(param.e,2)))/(pow(s.coordP.x,2) + pow(s.coordP.y,2)));
-    double C1 = ((-param.e*s.coordP.y + param.delta1*s.coordP.x*sqrt(pow(s.coordP.x,2) + pow(s.coordP.y,2) - pow(param.e,2)))/(pow(s.coordP.x,2) + pow(s.coordP.y,2)));
+    double root1 = pow(s.coordP.x,2) + pow(s.coordP.y,2) - pow(param.e,2);
+
+    bool checkRoot1 = true;
+
+    if(root1 < 0)
+        checkRoot1 = false;
+
+    if(checkRoot1 == false)
+        return false;
+
+    double S1 = ((param.e*s.coordP.x + param.delta1*s.coordP.y*sqrt(root1))/(pow(s.coordP.x,2) + pow(s.coordP.y,2)));
+    double C1 = ((-param.e*s.coordP.y + param.delta1*s.coordP.x*sqrt(root1))/(pow(s.coordP.x,2) + pow(s.coordP.y,2)));
 
 //    std::cout << "Wartosci S1 oraz C1" << std::endl;
 //    std::cout << "S1 = " << S1 << std::endl;
 //    std::cout << "C1 = " << C1 << std::endl;
 
     double S5 = CO*(SY*C1-CY*S1);
-    double C5 = param.delta5*sqrt(1-pow(S5,2));
+
+    double root2 = 1-pow(S5,2);
+
+    bool checkRoot2 = true;
+
+    if(root2 < 0)
+        checkRoot2 = false;
+
+    if(checkRoot2 == false)
+        return false;
+
+    double C5 = param.delta5*sqrt(root2);
 
 //    std::cout << "Wartosci S5 oraz C5" << std::endl;
 //    std::cout << "S5 = " << S5 << std::endl;
@@ -104,21 +125,51 @@ void calculateMachineCoords(ROBOT_PARAMETERS param, ROBOT_COORDS_SYSTEMS &s, MAC
 //    std::cout << "yR = " << s.coordR.y << std::endl;
 //    std::cout << "zR = " << s.coordR.z << std::endl;
 
-    double a = (-param.l1 + param.delta1*sqrt(pow(s.coordR.x,2) + pow(s.coordR.y,2) - pow(param.e,2)));
+    double root5 = pow(s.coordR.x,2) + pow(s.coordR.y,2) - pow(param.e,2);
+
+    bool checkRoot5 = true;
+
+    if(root5 < 0)
+        checkRoot5 = false;
+
+    if(checkRoot5 == false)
+        return false;
+
+    double a = (-param.l1 + param.delta1*sqrt(root5));
     double b = ((pow(a,2) + pow(s.coordR.z,2) + pow(param.l2,2) - pow(param.l3,2))/(2*param.l2));
 
 //    std::cout << "Zmienna a i b" << std::endl;
 //    std::cout << "a = " << a << std::endl;
 //    std::cout << "b = " << b << std::endl;
 
-    double S2 = (s.coordR.z*b + param.delta2*a*sqrt(pow(a,2) + pow(s.coordR.z,2) - pow(b,2)))/(pow(a,2) + pow(s.coordR.z,2));
-    double C2 = (a*b - param.delta2*s.coordR.z*sqrt(pow(a,2) + pow(s.coordR.z,2) - pow(b,2)))/(pow(a,2) + pow(s.coordR.z,2));
+    double root3 = pow(a,2) + pow(s.coordR.z,2) - pow(b,2);
+
+    bool checkRoot3 = true;
+
+    if(root3 < 0)
+        checkRoot3 = false;
+
+    if(checkRoot3 == false)
+        return false;
+
+    double S2 = (s.coordR.z*b + param.delta2*a*sqrt(root3))/(pow(a,2) + pow(s.coordR.z,2));
+    double C2 = (a*b - param.delta2*s.coordR.z*sqrt(root3))/(pow(a,2) + pow(s.coordR.z,2));
 
 //    std::cout << "Wartosci S2 oraz C2" << std::endl;
 //    std::cout << "S2 = " << S2 << std::endl;
 //    std::cout << "C2 = " << C2 << std::endl;
 
-    double S3 = -(param.delta2*sqrt(pow(a,2) + pow(s.coordR.z,2) - pow(b,2)))/param.l3;
+    double root4 = pow(a,2) + pow(s.coordR.z,2) - pow(b,2);
+
+    bool checkRoot4 = true;
+
+    if(root4 < 0)
+        checkRoot4 = false;
+
+    if(checkRoot4 == false)
+        return false;
+
+    double S3 = -(param.delta2*sqrt(root4))/param.l3;
     double C3 = (b - param.l2)/param.l3;
 
 //    std::cout << "Wartosci S3 oraz C3" << std::endl;
@@ -187,7 +238,7 @@ void calculateMachineCoords(ROBOT_PARAMETERS param, ROBOT_COORDS_SYSTEMS &s, MAC
 //    std::cout << "fi4 = " << actMachineCoords.fi4 << std::endl;
 //    std::cout << "fi5 = " << actMachineCoords.fi5 << std::endl;
 
-
+        return true;
 }
 
 void printCoordSystemPosition(ROBOT_COORDS_SYSTEMS s, MACHINE_COORDS actMachineCoords, int licz){
@@ -208,7 +259,7 @@ void printCoordSystemPosition(ROBOT_COORDS_SYSTEMS s, MACHINE_COORDS actMachineC
     std::cout << "fi5: " << actMachineCoords.fi5 << std::endl << std::endl;
 }
 
-bool checkPoint(ROBOT_PARAMETERS param, POINT addedPoint){
+bool checkPoint(ROBOT_PARAMETERS param, Point addedPoint){
 
     double reach = param.l1 + param.l2 + param.l3 + param.l4;
 
@@ -220,7 +271,31 @@ bool checkPoint(ROBOT_PARAMETERS param, POINT addedPoint){
     return true;
 }
 
-bool checkSafetyCondition(ROBOT_COORDS_SYSTEMS s){
+bool crossPoint(VEKTOR n1, VEKTOR n2, Point ws1, Point zs1, Point ws2, Point zs2){
+    // obliczenie punktu przecięcia się lini przechodzących przez człony
+    double y = (ws2.y + ws1.x - ws2.x)/(n1.y - n1.x);
+    double x = n1.x*(y - ws1.y)/n1.y + ws1.x;
+    double z = n1.z*(y - ws1.y)/n1.y + n1.z;
+
+    bool checkX = false;
+    bool checkY = false;
+    bool checkZ = false;
+
+    //Sprawdzenie czy punkt przecięcia leży na ramionach, jeżeli tak -> true
+    if((ws1.x < x && x < zs1.x) && (ws2.x < x && x < zs2.x))
+        checkX = true;
+    if((ws1.y < y && y < zs1.y) && (ws2.y < y && y < zs2.y))
+        checkY = true;
+    if((ws1.z < z && z < zs1.z) && (ws2.z < z && z < zs2.z))
+        checkZ = true;
+
+    if(checkX == true && checkY == true && checkZ == true)
+        return true; //Ramiona się przecinają :(
+    else
+        return false; // Ramiona nie przecinają się :)
+}
+
+bool checksafetyCondition(ROBOT_COORDS_SYSTEMS s){
 
     VEKTOR A = {s.coord1.x - s.coord0.x, s.coord1.y - s.coord0.y, s.coord1.z - s.coord0.z };
     VEKTOR B = {s.coord1prim.x - s.coord1.x, s.coord1prim.y - s.coord1.y, s.coord1prim.z - s.coord1.z };
@@ -231,13 +306,62 @@ bool checkSafetyCondition(ROBOT_COORDS_SYSTEMS s){
     VEKTOR G = {s.coordTCP.x - s.coordP.x, s.coordTCP.y - s.coordP.y, s.coordTCP.z - s.coordP.z };
 
     //Jeżeli linie nie są skośne, sprawdzane jest czy punkt ich przecięcia leży w obrębie długości ramion
-    if(!skewLines(A, C, s.coord0, s.coord1)){
+    if(skewLines(A, C, s.coord0, s.coord1prim) == false)
+        if(crossPoint(A, C, s.coord0, s.coord1, s.coord1prim, s.coord2prim))
+            return false;
 
-    }
+    if(skewLines(A, D, s.coord0, s.coord1) == false)
+        if(crossPoint(A, D, s.coord0, s.coord1, s.coord2prim, s.coord2))
+            return false;
 
+    if(skewLines(A, E, s.coord0, s.coord2) == false)
+        if(crossPoint(A, E, s.coord0, s.coord1, s.coord2, s.coordR))
+            return false;
+
+    if(skewLines(A, F, s.coord0, s.coordR) == false)
+        if(crossPoint(A, F, s.coord0, s.coord1, s.coordR, s.coordP))
+            return false;
+
+    if(skewLines(A, G, s.coord0, s.coordR) == false)
+        if(crossPoint(A, G, s.coord0, s.coord1, s.coordP, s.coordTCP))
+            return false;
+
+    if(skewLines(B, E, s.coord1, s.coord2) == false)
+        if(crossPoint(B, E, s.coord1, s.coord1prim, s.coord2, s.coordR))
+            return false;
+
+    if(skewLines(B, F, s.coord1, s.coordR) == false)
+        if(crossPoint(B, F, s.coord1, s.coord1prim, s.coordR, s.coordP))
+            return false;
+
+    if(skewLines(B, G, s.coord1, s.coordP) == false)
+        if(crossPoint(B, G, s.coord1, s.coord1prim, s.coordP, s.coordTCP))
+            return false;
+
+    if(skewLines(C, E, s.coord1prim, s.coord2) == false)
+        if(crossPoint(C, E, s.coord1prim, s.coord2prim, s.coord2, s.coordR))
+            return false;
+
+    if(skewLines(C, F, s.coord1prim, s.coordR) == false)
+        if(crossPoint(C, F, s.coord1prim, s.coord2prim, s.coordR, s.coordP))
+            return false;
+
+    if(skewLines(C, G, s.coord1prim, s.coordP) == false)
+        if(crossPoint(C, G, s.coord1prim, s.coord2prim, s.coordP, s.coordTCP))
+            return false;
+
+    if(skewLines(D, F, s.coord2prim, s.coordR) == false)
+        if(crossPoint(D, F, s.coord2prim, s.coord2, s.coordR, s.coordP))
+            return false;
+
+    if(skewLines(D, G, s.coord2prim, s.coordP) == false)
+        if(crossPoint(D, G, s.coord2prim, s.coord2, s.coordP, s.coordTCP))
+            return false;
+
+    return true;
 }
 
-bool skewLines(VEKTOR n1, VEKTOR n2, POINT p1, POINT p2){
+bool skewLines(VEKTOR n1, VEKTOR n2, Point p1, Point p2){
     // Jeżeli prsote są skośne to iloczyn mieszany (n1, n2, p1p2) != 0
 
     VEKTOR P1P2 = {p2.x-p1.x, p2.y-p1.y, p2.z-p1.z};

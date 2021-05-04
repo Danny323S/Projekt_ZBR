@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1468</width>
-    <height>848</height>
+    <width>1407</width>
+    <height>852</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -31,7 +37,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>180</y>
+      <y>200</y>
       <width>121</width>
       <height>391</height>
      </rect>
@@ -313,8 +319,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>550</y>
+      <x>390</x>
+      <y>560</y>
       <width>156</width>
       <height>241</height>
      </rect>
@@ -450,9 +456,9 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>160</y>
-      <width>171</width>
+      <x>140</x>
+      <y>200</y>
+      <width>181</width>
       <height>391</height>
      </rect>
     </property>
@@ -476,13 +482,27 @@
        </item>
        <item>
         <layout class="QGridLayout" name="gridLayout_3">
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="lineEdit_startPointX">
-           <property name="layoutDirection">
-            <enum>Qt::LeftToRight</enum>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_startPointX">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
            </property>
            <property name="text">
-            <string/>
+            <string>x [mm]</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_startPointZ">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>z [mm]</string>
            </property>
           </widget>
          </item>
@@ -496,27 +516,13 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_startPointX">
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-            </font>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="lineEdit_startPointX">
+           <property name="layoutDirection">
+            <enum>Qt::LeftToRight</enum>
            </property>
            <property name="text">
-            <string>x [mm]</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_startPointY">
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-            </font>
-           </property>
-           <property name="text">
-            <string>y [mm]</string>
+            <string/>
            </property>
           </widget>
          </item>
@@ -530,15 +536,15 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_startPointZ">
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_startPointY">
            <property name="font">
             <font>
              <pointsize>10</pointsize>
             </font>
            </property>
            <property name="text">
-            <string>z [mm]</string>
+            <string>y [mm]</string>
            </property>
           </widget>
          </item>
@@ -705,11 +711,11 @@ przejazdu:</string>
      <string>Wyjście</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_7">
+   <widget class="QLabel" name="label_icon">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>0</y>
+      <x>20</x>
+      <y>20</y>
       <width>161</width>
       <height>171</height>
      </rect>
@@ -764,7 +770,7 @@ przejazdu:</string>
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>530</y>
+      <y>540</y>
       <width>242</width>
       <height>21</height>
      </rect>
@@ -826,8 +832,8 @@ przejazdu:</string>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>160</y>
+      <x>350</x>
+      <y>170</y>
       <width>611</width>
       <height>231</height>
      </rect>
@@ -1014,7 +1020,7 @@ przejazdu:</string>
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>400</y>
+      <y>410</y>
       <width>238</width>
       <height>121</height>
      </rect>
@@ -1119,7 +1125,7 @@ przejazdu:</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1468</width>
+     <width>1407</width>
      <height>21</height>
     </rect>
    </property>
@@ -1127,5 +1133,22 @@ przejazdu:</string>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButtonStart_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>317</x>
+     <y>757</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>343</x>
+     <y>678</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

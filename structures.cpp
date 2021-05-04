@@ -1,6 +1,6 @@
 #include "structures.h"
 
-struct POINT point;
+struct Point point;
 
 struct  ROBOT_PARAMETERS robotParameters;
 
